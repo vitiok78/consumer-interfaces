@@ -2,6 +2,7 @@ package main
 
 import (
 	"consumer-interfaces/db"
+	"consumer-interfaces/rabbit"
 	"consumer-interfaces/services"
 	"fmt"
 	"log"
@@ -10,7 +11,8 @@ import (
 func main() {
 
 	repo := db.NewUserRepo()
-	userService := services.NewUserService(repo)
+	queue := rabbit.NewRabbit()
+	userService := services.NewUserService(repo, queue)
 
 	fmt.Println("Start")
 
