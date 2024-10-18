@@ -2,6 +2,7 @@ package main
 
 import (
 	"consumer-interfaces/db"
+	"consumer-interfaces/decorator"
 	"consumer-interfaces/rabbit"
 	"consumer-interfaces/services"
 	"fmt"
@@ -12,7 +13,9 @@ func main() {
 
 	repo := db.NewUserRepo()
 	queue := rabbit.NewRabbit()
-	userService := services.NewUserService(repo, queue)
+
+	repoQueue := decorator.NewUserRepoWithQueue(repo, queue)
+	userService := services.NewUserService(repoQueue)
 
 	fmt.Println("Start")
 

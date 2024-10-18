@@ -2,18 +2,20 @@ package services
 
 import (
 	"consumer-interfaces/db"
-	"consumer-interfaces/rabbit"
 	"fmt"
 	"log"
 )
 
-type UserService struct {
-	repo  *db.UserRepo
-	queue *rabbit.Rabbit
+type userRepo interface {
+	CreateUser(username, password string) *db.User
 }
 
-func NewUserService(repo *db.UserRepo, queue *rabbit.Rabbit) *UserService {
-	return &UserService{repo, queue}
+type UserService struct {
+	repo userRepo
+}
+
+func NewUserService(repo userRepo) *UserService {
+	return &UserService{repo}
 }
 
 func (s *UserService) CreateNewUser(username, password string) error {
@@ -36,8 +38,6 @@ func (s *UserService) CreateNewUser(username, password string) error {
 	log.Printf("Starting Create new user with username: %s, password: %s\n", username, password)
 	user := s.repo.CreateUser(username, password)
 	log.Printf("Completed Create new user with ID: %d, username: %s, password: %s\n", user.ID, user.Username, user.Password)
-
-	s.queue.PublishMessage(fmt.Sprintf("event: user-created ID: %d, username: %s", user.ID, user.Username))
 
 	return nil
 }
