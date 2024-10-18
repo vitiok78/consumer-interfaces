@@ -1,6 +1,9 @@
 package db
 
-import "log"
+import (
+	"log"
+	"math/rand"
+)
 
 type User struct {
 	ID       int
@@ -15,8 +18,16 @@ func NewUserRepo() *UserRepo {
 	return &UserRepo{}
 }
 
-func (u *UserRepo) CreateUser(id int, username, password string) {
+func (u *UserRepo) CreateUser(username, password string) *User {
+	id := rand.Int()
+
 	log.Printf("Save user to database with id: %d, username: %s, password: %s\n", id, username, password)
+
+	return &User{
+		ID:       id,
+		Username: username,
+		Password: password,
+	}
 }
 
 func (u *UserRepo) GetUser(id int) {

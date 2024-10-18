@@ -22,4 +22,6 @@ func main() {
 		log.Println(fmt.Sprintf("Error creating new user: %s", err))
 	}
 
+	fmt.Println("End")
+
 }

@@ -4,7 +4,6 @@ import (
 	"consumer-interfaces/db"
 	"fmt"
 	"log"
-	"math/rand"
 )
 
 type UserService struct {
@@ -16,8 +15,6 @@ func NewUserService(repo *db.UserRepo) *UserService {
 }
 
 func (s *UserService) CreateNewUser(username, password string) error {
-	id := rand.Int()
-
 	if len(username) == 0 {
 		return fmt.Errorf("username cannot be empty")
 	}
@@ -34,8 +31,9 @@ func (s *UserService) CreateNewUser(username, password string) error {
 		return fmt.Errorf("password must be at least 6 characters long")
 	}
 
-	log.Printf("Creating new user with id: %d, username: %s, password: %s\n", id, username, password)
-	s.repo.CreateUser(id, username, password)
+	log.Printf("Starting Create new user with username: %s, password: %s\n", username, password)
+	user := s.repo.CreateUser(username, password)
+	log.Printf("Completed Create new user with ID: %d, username: %s, password: %s\n", user.ID, user.Username, user.Password)
 
 	return nil
 }
